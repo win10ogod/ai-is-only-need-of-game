@@ -1,0 +1,123 @@
+id: "library_entrance"
+name: "圖書館入口"
+description: |
+  古老的圖書館大門聳立在你面前，厚重的橡木門上雕刻著神秘的星象圖案。入口處的石階上落滿了枯葉，顯示這裡已經很久沒有訪客了。門廊兩側各有一根大理石柱，上面刻著模糊的銘文。空氣中瀰漫著陳舊書籍的氣息。
+
+initial_state:
+  door_locked: true
+  first_visit: true
+  symbols_visible: false
+  door_inscription_revealed: false
+
+items:
+  door:
+    id: "main_door"
+    name: "圖書館大門"
+    description: "厚重的橡木門，上面雕刻著複雜的星象圖案。門看起來是鎖著的，但似乎不是普通的鎖。"
+    is_takeable: false
+    is_useable: true
+    interactions:
+      examine:
+        conditions: {first_visit: true}
+        result: "仔細觀察大門，你發現星象圖案似乎可以轉動。也許這是某種機關？"
+        state_changes: {symbols_visible: true}
+      push:
+        conditions: {door_locked: true}
+        result: "門紋絲不動。看來需要找到正確的開啟方式。"
+      rotate_symbols:
+        conditions: {symbols_visible: true}
+        result: "星象圖案可以轉動，但需要找到正確的排列方式。"
+
+  marble_pillar_left:
+    id: "pillar_left"
+    name: "左側石柱"
+    description: "光滑的大理石柱，上面刻著古老的銘文。銘文似乎提到了某種天體運行的規律。"
+    is_takeable: false
+    is_useable: true
+    interactions:
+      examine:
+        result: "銘文提到：'當北極星指向命運之門，智者方能窺見真理之光。'"
+        state_changes: {examined_left_pillar: true}
+      touch:
+        result: "石柱表面光滑冰涼，似乎蘊含著某種能量。"
+
+  marble_pillar_right:
+    id: "pillar_right"
+    name: "右側石柱"
+    description: "與左側相似的大理石柱，但銘文內容不同。"
+    is_takeable: false
+    is_useable: true
+    interactions:
+      examine:
+        result: "銘文寫著：'追隨群星之舞，遵循天象之序，真理自現。'"
+        state_changes: {examined_right_pillar: true}
+      touch:
+        result: "同樣的光滑觸感，你感覺這兩根石柱一定有特殊的用途。"
+
+  fallen_leaves:
+    id: "leaves"
+    name: "枯葉"
+    description: "厚厚的一層枯葉，似乎可以翻找看看。"
+    is_takeable: false
+    is_useable: true
+    interactions:
+      search:
+        conditions: {first_search: true}
+        result: "在枯葉中，你發現了一個古老的星盤碎片。"
+        state_changes: {first_search: false}
+        item_rewards: ["star_disc_fragment"]
+      examine:
+        result: "普通的枯葉，但或許值得仔細翻找。"
+
+hidden_items:
+  star_disc_fragment:
+    id: "star_disc_fragment"
+    name: "星盤碎片"
+    description: "一片青銅製的星盤碎片，上面刻著一些星座圖案。"
+    is_takeable: true
+    is_useable: true
+    state:
+      found: false
+    interactions:
+      examine:
+        result: "這似乎是某種天文觀測儀器的一部分。也許與大門上的星象圖案有關？"
+
+connected_scenes:
+  - "library_hall"
+
+npcs:
+  - "librarian"
+
+events:
+  door_puzzle_solved:
+    conditions:
+      - "symbols_aligned"
+      - "examined_left_pillar"
+      - "examined_right_pillar"
+    actions:
+      - type: "change_state"
+        target: "door_locked"
+        value: false
+      - type: "display_message"
+        content: "隨著最後一個星象圖案對齊，大門發出一陣低沉的轟鳴，緩緩開啟了。"
+      - type: "unlock_achievement"
+        achievement: "first_puzzle"
+
+  first_entrance:
+    conditions:
+      - "first_visit"
+      - "door_locked: false"
+    actions:
+      - type: "display_message"
+        content: "當你踏入圖書館的那一刻，一股神秘的氣息撲面而來。你感覺這次探索之旅將會非常不平凡。"
+      - type: "change_state"
+        target: "first_visit"
+        value: false
+
+hints:
+  - conditions: {examined_left_pillar: false, examined_right_pillar: false}
+    text: "也許應該先查看入口處的石柱，尋找一些線索。"
+  - conditions: {symbols_visible: true, star_disc_fragment.found: false}
+    text: "周圍環境中可能藏有有用的物品。試試搜索看看？"
+  - conditions: {symbols_visible: true, star_disc_fragment.found: true}
+    text: "星盤碎片上的圖案與大門上的似乎有某種聯繫。"

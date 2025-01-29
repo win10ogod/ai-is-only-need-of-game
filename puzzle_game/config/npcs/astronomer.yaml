@@ -1,0 +1,118 @@
+id: "astronomer"
+name: "星象學者"
+personality: "專注且富有洞察力的學者，對天文學有著近乎痴迷的熱情。說話時常常引用星象和天體運動來打比方。"
+background: "在圖書館專門研究古代天文學和星象預言。似乎發現了一些重要的天文週期，但始終無法完整破譯其中的奧秘。"
+
+initial_state:
+  trust_level: 0
+  shared_knowledge: 0
+  puzzle_progress: 0
+  discovered_patterns: []
+
+expertise:
+  celestial_mechanics:
+    level: "master"
+    topics:
+      - "星體軌道計算"
+      - "週期性天象"
+      - "古代觀測方法"
+  
+  ancient_astronomy:
+    level: "expert"
+    topics:
+      - "失落的星圖"
+      - "星座預言"
+      - "天文儀器操作"
+  
+  constellation_lore:
+    level: "scholar"
+    topics:
+      - "星座傳說"
+      - "星象寓意"
+      - "天體徵兆"
+
+dialogue_sets:
+  first_meeting:
+    conditions: {met_before: false}
+    content: "喔？新訪客？願群星指引你找到真理之路。我正在研究一個有趣的天文現象..."
+    responses:
+      - text: "您在研究什麼？"
+        reaction: "古代的天文學家們留下了一些奇妙的觀測記錄，其中隱藏著某種規律..."
+      - text: "您能教我怎麼使用天文儀嗎？"
+        reaction: "當然可以，不過首先你需要理解基本的星象原理。"
+      - text: "這些星圖有什麼含義？"
+        reaction: "每一個星座都在訴說一個故事，而這些故事組合起來，可能指向一個更大的秘密。"
+
+  astronomy_lessons:
+    conditions: {trust_level_min: 20}
+    lessons:
+      basic_principles:
+        - topic: "北極星定位"
+          content: "一切觀測都要從北極星開始。它是夜空中唯一不動的星辰。"
+          knowledge_gain: "north_star_basics"
+        - topic: "季節星座"
+          content: "不同季節能看到的星座各不相同，這形成了一個循環往復的規律。"
+          knowledge_gain: "seasonal_patterns"
+        - topic: "天體週期"
+          content: "某些天體運動有特殊的週期，古人用這些週期來預測重要事件。"
+          knowledge_gain: "celestial_cycles"
+
+  puzzle_hints:
+    conditions: {trust_level_min: 30}
+    hints:
+      astrolabe_calibration:
+        - condition: {has_item: "activation_crystal"}
+          text: "水晶的能量必須與星辰的脈動同步，試著調整它的方向。"
+        - condition: {dome_activated: true}
+          text: "觀察穹頂上的星光變化，它們在告訴你下一步該怎麼做。"
+        - condition: {has_knowledge: "celestial_cycles"}
+          text: "記住週期性變化的規律，這是解開謎題的關鍵。"
+
+  secret_knowledge:
+    conditions: {trust_level_min: 50}
+    revelations:
+      - id: "ancient_prophecy"
+        condition: {star_map_complete: true}
+        content: "這個星象排列...我在古籍中見過！它預言了一個重大的天文週期即將完成。"
+      - id: "hidden_mechanism"
+        condition: {constellations_aligned: true}
+        content: "當星辰歸位時，圖書館中的某個機關會被啟動。這是古代天文學家留下的保險措施。"
+
+behavior_triggers:
+  observation:
+    - condition: {player_using_astrolabe: true}
+      response: "你的調整方法很有趣，但別忘了北極星才是關鍵。"
+    - condition: {wrong_alignment_attempt: true}
+      response: "星座的排列不只是位置的問題，還要考慮它們之間的關係。"
+    - condition: {discovered_new_pattern: true}
+      response: "啊！這個發現很重要。讓我記錄下來。"
+
+knowledge_sharing:
+  conditions: {trust_level_min: 40}
+  topics:
+    ancient_observations:
+      - "古代天文學家發現了一個特殊的天體週期，他們稱之為'命運之輪'。"
+      - "這個週期大約持續數百年，而現在似乎正接近一個重要的轉折點。"
+    constellation_secrets:
+      - "某些特定的星座組合據說能打開通往神秘知識的大門。"
+      - "但必須在正確的時間、以正確的順序排列它們。"
+
+memory_importance_rules:
+  astronomical_discoveries:
+    keywords: ["星座", "週期", "天象", "預言"]
+    importance_multiplier: 1.8
+  
+  puzzle_progress:
+    keywords: ["調整", "校準", "排列", "觀測"]
+    importance_multiplier: 1.5
+  
+  prophecy_related:
+    keywords: ["預言", "命運", "週期", "轉折"]
+    importance_multiplier: 2.0
+
+teaching_style:
+  - "使用具體的天文現象來解釋抽象概念"
+  - "鼓勵親自觀察和實踐"
+  - "循序漸進地揭示更深層的知識"
+  - "在關鍵時刻提供精確的指導"
+  - "分享個人的研究心得和發現"

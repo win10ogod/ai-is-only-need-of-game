@@ -1,0 +1,140 @@
+id: "astronomy_room"
+name: "天文觀測室"
+description: |
+  這是一個圓形的房間，天花板是一個巨大的半球形穹頂。穹頂上繪製著精細的星圖，數百顆星星以金色顏料描繪，在微弱的光線下閃爍。房間中央有一個青銅製的天文儀器，周圍的牆壁上掛著各種天文圖表和古老的觀測工具。
+
+initial_state:
+  dome_activated: false
+  star_map_complete: false
+  constellations_aligned: false
+  mechanism_exposed: false
+  power_level: 0
+
+items:
+  celestial_dome:
+    id: "dome"
+    name: "星空穹頂"
+    description: "巨大的半球形穹頂，上面繪製著複雜的星圖。某些星座似乎可以發光，但現在都是暗的。"
+    is_takeable: false
+    is_useable: true
+    interactions:
+      examine:
+        result: "仔細觀察發現，某些星座的位置似乎可以通過下面的儀器調整。"
+      observe:
+        conditions: {dome_activated: true}
+        result: "穹頂上的星座圖案發出微弱的藍光，形成一幅動態的星空圖。"
+
+  astronomical_device:
+    id: "astrolabe"
+    name: "天文儀"
+    description: "一個精密的青銅天文儀器，有多個可以轉動的環和指針。中央有一個插槽，似乎缺少了某個零件。"
+    is_takeable: false
+    is_useable: true
+    state:
+      calibrated: false
+      power_crystal_inserted: false
+    interactions:
+      examine:
+        result: "儀器上刻有星座符號和刻度，似乎用於調整穹頂上的星圖。中央的插槽形狀很特別。"
+      rotate:
+        conditions: {power_crystal_inserted: true}
+        result: "環和指針可以自由轉動，每個調整都會影響穹頂上的星圖。"
+      insert_crystal:
+        conditions: 
+          has_item: "activation_crystal"
+          power_crystal_inserted: false
+        result: "水晶完美地嵌入插槽，儀器開始發出柔和的光芒。"
+        state_changes: 
+          power_crystal_inserted: true
+          power_level: 1
+      calibrate:
+        conditions: 
+          power_crystal_inserted: true
+          calibrated: false
+        result: "你按照古籍中的說明調整儀器，指針開始指向特定的星座。"
+        state_changes:
+          calibrated: true
+
+  star_charts:
+    id: "charts"
+    name: "星圖集"
+    description: "掛在牆上的一系列古老星圖，記錄了不同時期的星空狀態。"
+    is_takeable: false
+    is_useable: true
+    interactions:
+      examine:
+        result: "這些星圖記錄了星座在不同季節的位置變化。特別標注了一個特殊的天體排列。"
+      study:
+        conditions: {has_skill: "astronomy_knowledge"}
+        result: "你認出了一個重要的天體週期規律，這可能與儀器的調整有關。"
+        knowledge_gain: "celestial_cycle"
+
+puzzle_elements:
+  constellation_alignment:
+    name: "星座排列"
+    description: "需要將特定的星座排列到正確的位置。"
+    solution:
+      - step: "北極星校準"
+        hint: "以北極星為基準點，這是永恆不變的指引。"
+      - step: "季節星座調整"
+        hint: "四季星座的位置必須對應它們在古籍中記載的特定時節。"
+      - step: "關鍵星群連接"
+        hint: "某些特定的星群必須形成特定的圖案，就像古籍中提到的'命運之鑰'。"
+    success_conditions:
+      - "north_star_aligned"
+      - "seasonal_constellations_correct"
+      - "key_pattern_formed"
+
+events:
+  constellation_activation:
+    conditions:
+      - "power_crystal_inserted"
+      - "astrolabe.calibrated"
+    actions:
+      - type: "change_state"
+        target: "dome_activated"
+        value: true
+      - type: "display_message"
+        content: "穹頂上的星圖突然亮起，整個房間沐浴在星光之中。"
+
+  puzzle_completion:
+    conditions:
+      - "dome_activated"
+      - "constellations_aligned"
+    actions:
+      - type: "change_state"
+        target: "mechanism_exposed"
+        value: true
+      - type: "display_message"
+        content: "當最後一個星座歸位時，穹頂中央開啟了一個暗格，露出了一個神秘的裝置。"
+      - type: "add_item"
+        item: "celestial_key"
+      - type: "unlock_achievement"
+        achievement: "master_astronomer"
+
+hints:
+  - conditions: {power_crystal_inserted: false}
+    text: "儀器似乎需要一個特殊的能量源才能啟動。"
+  - conditions: {dome_activated: false, power_crystal_inserted: true}
+    text: "參考星圖集中的記載，也許能找到正確的校準方法。"
+  - conditions: {dome_activated: true, constellations_aligned: false}
+    text: "北極星的位置是關鍵，其他星座應該圍繞它排列。"
+
+required_items:
+  - id: "activation_crystal"
+    for_state: "dome_activated"
+  - id: "star_chart_fragment"
+    for_state: "constellations_aligned"
+
+knowledge_requirements:
+  - id: "basic_astronomy"
+    for_action: "calibrate_device"
+  - id: "celestial_patterns"
+    for_action: "align_constellations"
+
+connected_scenes:
+  - "library_hall"
+  - "alchemy_lab"
+
+npcs:
+  - "astronomer"

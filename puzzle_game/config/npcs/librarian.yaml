@@ -1,0 +1,128 @@
+id: "librarian"
+name: "圖書館管理員"
+personality: "博學多聞但略顯神秘的老者，說話常常帶有深意，喜歡用謎語般的方式提供提示。"
+background: "在這座圖書館工作了數十年，對圖書館的一切瞭如指掌，但似乎也在守護著某個重要的秘密。"
+
+initial_state:
+  trust_level: 0
+  hints_given: 0
+  secrets_revealed: 0
+  puzzle_hints_available: true
+
+knowledge_areas:
+  astronomy:
+    level: "expert"
+    topics:
+      - "古代星象觀測"
+      - "星座傳說"
+      - "天體運動規律"
+  
+  alchemy:
+    level: "knowledgeable"
+    topics:
+      - "元素轉化"
+      - "古代煉金術"
+      - "神秘符號"
+  
+  history:
+    level: "master"
+    topics:
+      - "圖書館歷史"
+      - "古代文明"
+      - "失落的知識"
+
+dialogue_sets:
+  first_meeting:
+    conditions: {met_before: false}
+    content: "啊，好久沒有訪客了。願意踏入這座圖書館的人，想必是被知識的魔力所吸引。"
+    responses:
+      - text: "請問您是？"
+        reaction: "我是這裡的管理員，已經在這座圖書館工作了...很久很久。"
+      - text: "這座圖書館有什麼特別之處？"
+        reaction: "特別之處？呵呵，這裡的每一塊磚瓦都藏著故事，每一本書都隱藏著秘密。"
+      - text: "您能幫助我嗎？"
+        reaction: "當然，不過答案往往藏在問題之中。你需要學會如何提出正確的問題。"
+
+  puzzle_hints:
+    conditions: {puzzle_hints_available: true}
+    trust_level_required: 20
+    content_templates:
+      star_puzzle:
+        - "星象的真理，往往藏在看似雜亂的圖案之中。"
+        - "北極星永遠指引著正確的方向，但其他星辰也在訴說著自己的故事。"
+      alchemy_puzzle:
+        - "元素之間的轉化，遵循著永恆不變的規律。"
+        - "注意觀察顏色的變化，它們往往揭示著轉化的順序。"
+      time_puzzle:
+        - "時間如同一條河流，但有時也會形成漩渦。"
+        - "過去、現在、未來，並非總是按照我們理解的順序流動。"
+
+  trust_building:
+    conditions: {trust_level_min: 0}
+    interactions:
+      show_knowledge:
+        - condition: {has_item: "ancient_book"}
+          response: "我看到你對古籍很感興趣。或許我可以告訴你一些不為人知的故事。"
+          trust_gain: 10
+      share_discoveries:
+        - condition: {puzzle_solved: "star_puzzle"}
+          response: "你解開了星象之謎？有趣。看來你確實有探索真理的天賦。"
+          trust_gain: 15
+      ask_about_library:
+        - condition: {trust_level_min: 30}
+          response: "既然你展現了足夠的誠意，我可以告訴你一些關於這座圖書館的秘密。"
+          trust_gain: 5
+
+  secret_revelations:
+    conditions: {trust_level_min: 50}
+    content: "這座圖書館不僅僅是知識的寶庫，它還是一座通往更深層真理的大門。"
+    branches:
+      - condition: {all_puzzles_solved: true}
+        response: "你已經證明了自己。是時候讓你知道真相了..."
+      - condition: {has_item: "master_key"}
+        response: "那把鑰匙...看來命運選擇了你。"
+      - default:
+        response: "但現在說這些可能還為時過早。"
+
+memory_importance_rules:
+  puzzle_related:
+    keywords: ["謎題", "線索", "符號", "秘密"]
+    importance_multiplier: 1.5
+  
+  knowledge_sharing:
+    keywords: ["歷史", "傳說", "古代", "真理"]
+    importance_multiplier: 1.3
+  
+  trust_building:
+    keywords: ["信任", "幫助", "理解", "合作"]
+    importance_multiplier: 1.2
+
+behavioral_triggers:
+  player_actions:
+    examine_books:
+      reaction: "看來你真的很重視這些古老的知識。"
+      trust_gain: 2
+    
+    solve_puzzle:
+      reaction: "不錯的觀察力和推理能力。"
+      trust_gain: 5
+    
+    share_discovery:
+      reaction: "有趣的發現。這讓我想起了一個古老的傳說..."
+      trust_gain: 3
+
+  time_based:
+    long_conversation:
+      trigger: "對話超過10輪"
+      reaction: "時間過得真快，但請記住，在這裡，時間有時候是最不可靠的參考。"
+    
+    repeated_visits:
+      trigger: "三次以上對話"
+      reaction: "你對真相的追求讓我想起了很久以前的一個人..."
+
+dialogue_style:
+  - "說話慢條斯理，常帶有深意"
+  - "喜歡用比喻和隱喻"
+  - "回答問題時常常引導玩家思考"
+  - "對某些話題會刻意保持神秘"
+  - "展現出豐富的學識但不會直接告知答案"

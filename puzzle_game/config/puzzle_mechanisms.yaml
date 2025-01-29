@@ -1,0 +1,219 @@
+# 謎題機制與進度系統配置
+
+puzzle_chains:
+  main_sequence:
+    - id: "entrance_puzzle"
+      name: "圖書館入口之謎"
+      requirements: []
+      rewards:
+        - type: "access"
+          target: "library_hall"
+        - type: "knowledge"
+          content: "basic_library_knowledge"
+    
+    - id: "astronomy_puzzle"
+      name: "天文觀測之謎"
+      requirements:
+        - "entrance_puzzle_completed"
+        - "has_item:star_disc_fragment"
+      rewards:
+        - type: "item"
+          id: "celestial_key"
+        - type: "knowledge"
+          content: "advanced_astronomy"
+    
+    - id: "alchemy_puzzle"
+      name: "元素轉化之謎"
+      requirements:
+        - "astronomy_puzzle_completed"
+        - "has_knowledge:basic_alchemy"
+      rewards:
+        - type: "item"
+          id: "philosophers_stone"
+        - type: "access"
+          target: "secret_laboratory"
+    
+    - id: "time_puzzle"
+      name: "時間規律之謎"
+      requirements:
+        - "has_item:celestial_key"
+        - "has_item:philosophers_stone"
+      rewards:
+        - type: "mechanism"
+          id: "time_control"
+        - type: "knowledge"
+          content: "temporal_mechanics"
+
+puzzle_mechanics:
+  astronomy_mechanisms:
+    star_alignment:
+      type: "sequence"
+      steps:
+        - id: "north_star_alignment"
+          description: "將北極星校準到正確位置"
+          validation: "check_star_position"
+        - id: "constellation_pattern"
+          description: "按照古籍記載排列星座"
+          validation: "check_constellation_pattern"
+        - id: "power_activation"
+          description: "啟動星能傳輸"
+          validation: "check_power_flow"
+      success_conditions:
+        all_required: true
+        conditions:
+          - "north_star_aligned"
+          - "constellations_correct"
+          - "power_active"
+    
+  alchemy_mechanisms:
+    element_transformation:
+      type: "combination"
+      elements:
+        - "fire"
+        - "water"
+        - "earth"
+        - "air"
+        - "aether"
+      valid_combinations:
+        - sequence: ["fire", "air", "aether"]
+          result: "celestial_flame"
+        - sequence: ["water", "earth", "aether"]
+          result: "crystal_essence"
+      validation: "check_element_combination"
+
+  time_mechanisms:
+    temporal_alignment:
+      type: "synchronization"
+      components:
+        - id: "past_resonance"
+          frequency: 3
+        - id: "present_flow"
+          frequency: 1
+        - id: "future_echo"
+          frequency: 2
+      success_condition: "all_frequencies_aligned"
+
+puzzle_dependencies:
+  item_requirements:
+    astronomy_puzzle:
+      - id: "star_disc_fragment"
+        use: "calibration"
+      - id: "activation_crystal"
+        use: "power_source"
+    
+    alchemy_puzzle:
+      - id: "elemental_catalyst"
+        use: "transformation"
+      - id: "ancient_formula"
+        use: "recipe_guide"
+    
+    time_puzzle:
+      - id: "celestial_key"
+        use: "mechanism_activation"
+      - id: "philosophers_stone"
+        use: "power_amplification"
+
+  knowledge_requirements:
+    astronomy_puzzle:
+      - id: "basic_astronomy"
+        source: "astronomer"
+      - id: "celestial_patterns"
+        source: "ancient_texts"
+    
+    alchemy_puzzle:
+      - id: "basic_alchemy"
+        source: "alchemist"
+      - id: "element_theory"
+        source: "research_notes"
+    
+    time_puzzle:
+      - id: "temporal_theory"
+        source: "librarian"
+      - id: "mechanism_operation"
+        source: "device_manual"
+
+validation_rules:
+  star_positions:
+    tolerance: 0.1  # 允許的誤差範圍
+    check_intervals: 15  # 檢查間隔（度）
+    required_accuracy: 0.95  # 要求的準確度
+
+  element_combinations:
+    max_steps: 5  # 最大組合步驟
+    reaction_time: 3  # 反應時間（秒）
+    purity_threshold: 0.8  # 純度要求
+
+  time_synchronization:
+    phase_tolerance: 0.05  # 相位誤差容許
+    sync_duration: 10  # 需維持同步的時間（秒）
+    frequency_match: 0.98  # 頻率匹配要求
+
+progression_tracking:
+  metrics:
+    puzzle_completion:
+      type: "percentage"
+      weight: 0.4
+    
+    knowledge_acquisition:
+      type: "cumulative"
+      weight: 0.3
+    
+    item_collection:
+      type: "checklist"
+      weight: 0.3
+  
+  achievements:
+    puzzle_master:
+      requirements:
+        - "all_puzzles_completed"
+        - "no_hints_used"
+    
+    knowledge_seeker:
+      requirements:
+        - "all_knowledge_acquired"
+        - "all_books_read"
+    
+    time_walker:
+      requirements:
+        - "time_puzzle_completed"
+        - "all_temporal_events_witnessed"
+
+difficulty_scaling:
+  hint_availability:
+    easy:
+      hint_cooldown: 60
+      max_hints: 3
+    medium:
+      hint_cooldown: 180
+      max_hints: 2
+    hard:
+      hint_cooldown: 300
+      max_hints: 1
+
+  puzzle_complexity:
+    easy:
+      steps_required: 3
+      error_tolerance: 0.2
+    medium:
+      steps_required: 5
+      error_tolerance: 0.1
+    hard:
+      steps_required: 7
+      error_tolerance: 0.05
+
+error_handling:
+  puzzle_reset:
+    conditions:
+      - "critical_error"
+      - "sequence_broken"
+      - "safety_threshold_exceeded"
+    
+    actions:
+      - "reset_mechanism"
+      - "restore_initial_state"
+      - "clear_progress"
+    
+    player_feedback:
+      - "visual_warning"
+      - "error_message"
+      - "reset_confirmation"

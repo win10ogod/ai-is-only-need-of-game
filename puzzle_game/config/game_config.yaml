@@ -1,0 +1,107 @@
+game_name: "古老圖書館之謎"
+initial_scene: "library_entrance"
+game_version: "1.0.0"
+description: "在一座神秘的圖書館中，解開古老的謎題，揭開隱藏的秘密。每個謎題的解答都將引導你更接近真相。"
+
+game_states:
+  # 主要謎題進度追踪
+  main_puzzles:
+    constellation_puzzle: false
+    alchemy_puzzle: false
+    time_puzzle: false
+    language_puzzle: false
+    
+  # 收集物品追踪
+  collected_items:
+    star_map: false
+    ancient_book: false
+    hourglass: false
+    crystal: false
+    
+  # 解鎖的知識
+  discovered_knowledge:
+    constellation_secret: false
+    alchemy_formula: false
+    time_sequence: false
+    ancient_language: false
+
+  # NPC信任度
+  npc_trust_levels:
+    librarian: 0
+    astronomer: 0
+    alchemist: 0
+    scholar: 0
+
+# 遊戲進程階段
+game_stages:
+  - id: "initial"
+    name: "初探圖書館"
+    requirements: []
+    description: "剛進入圖書館，開始探索環境。"
+    
+  - id: "puzzle_discovery"
+    name: "發現謎題"
+    requirements: ["found_first_clue"]
+    description: "發現圖書館中隱藏的謎題系統。"
+    
+  - id: "knowledge_gathering"
+    name: "收集知識"
+    requirements: ["puzzle_discovery", "met_librarian"]
+    description: "從各種來源收集解謎所需的知識。"
+    
+  - id: "puzzle_solving"
+    name: "解謎階段"
+    requirements: ["knowledge_gathering", "collected_tools"]
+    description: "開始解開各個謎題。"
+    
+  - id: "final_revelation"
+    name: "最終揭示"
+    requirements: [
+      "constellation_puzzle",
+      "alchemy_puzzle",
+      "time_puzzle",
+      "language_puzzle"
+    ]
+    description: "解開所有謎題，揭示圖書館的終極秘密。"
+
+# 全局遊戲設置
+settings:
+  max_inventory_size: 10
+  save_enabled: true
+  hint_cooldown: 300  # 秒
+  puzzle_difficulty: "medium"  # easy, medium, hard
+  
+# 成就系統
+achievements:
+  first_puzzle:
+    name: "初次解謎"
+    description: "解開第一個謎題"
+    
+  knowledge_seeker:
+    name: "知識探索者"
+    description: "收集所有知識碎片"
+    
+  friend_of_library:
+    name: "圖書館之友"
+    description: "獲得所有NPC的信任"
+    
+  master_puzzler:
+    name: "解謎大師"
+    description: "不使用提示解開所有謎題"
+
+# 遊戲機制規則
+mechanics:
+  puzzle_rules:
+    max_attempts: 3
+    hint_penalty: 10
+    time_limit: 0  # 0表示無時間限制
+    
+  inventory_rules:
+    combinable_items: true
+    droppable_items: true
+    examination_enabled: true
+    
+  dialogue_rules:
+    memory_impact: true
+    trust_affect_hints: true
+    knowledge_sharing: true
