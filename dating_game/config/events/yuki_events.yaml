@@ -1,0 +1,136 @@
+# 與優希相關的特殊事件和對話選項
+
+relationship_stages:
+  - level: 0
+    status: "陌生人"
+    description: "優希會以服務生的身份和你互動，保持禮貌但有距離。"
+    available_topics:
+      - "詢問咖啡推薦"
+      - "閒聊天氣"
+      - "詢問工作時間"
+
+  - level: 20
+    status: "熟客"
+    description: "優希開始記得你的常點飲品，偶爾會多聊幾句。"
+    available_topics:
+      - "討論咖啡品味"
+      - "詢問學習情況"
+      - "稱讚她的服務態度"
+
+  - level: 40
+    status: "朋友"
+    description: "優希會和你分享一些生活趣事和想法。"
+    available_topics:
+      - "討論藝術創作"
+      - "分享生活經歷"
+      - "約在公園見面"
+
+  - level: 60
+    status: "好友"
+    description: "優希會主動和你分享煩惱，也願意在下班後一起散步。"
+    available_topics:
+      - "談論未來夢想"
+      - "分享內心想法"
+      - "一起去美術館"
+
+  - level: 80
+    status: "親密"
+    description: "優希會和你分享她的作品集，也願意接受更私人的邀約。"
+    available_topics:
+      - "討論感情觀"
+      - "一起創作"
+      - "表達愛意"
+
+special_events:
+  coffee_art:
+    id: "coffee_art"
+    name: "拉花藝術"
+    condition: "scene == cafe and relationship_level >= 20"
+    description: "優希在你的咖啡上做了特別的拉花圖案。"
+    choices:
+      - text: "讚美她的拉花技術"
+        effect: "relationship +5"
+      - text: "拍照紀念"
+        effect: "relationship +3"
+      - text: "匆匆喝掉"
+        effect: "relationship -2"
+
+  sketching_together:
+    id: "sketching_together"
+    name: "一起寫生"
+    condition: "scene == park and relationship_level >= 40 and time == evening"
+    description: "優希正在公園寫生，邀請你一起嘗試。"
+    choices:
+      - text: "認真跟著學習"
+        effect: "relationship +8"
+      - text: "畫得很差但態度誠懇"
+        effect: "relationship +5"
+      - text: "開玩笑敷衍"
+        effect: "relationship -5"
+
+  art_exhibition:
+    id: "art_exhibition"
+    name: "畫展機會"
+    condition: "scene == art_gallery and relationship_level >= 60"
+    description: "優希提到她在考慮參加新人畫展，但似乎沒有信心。"
+    choices:
+      - text: "認真鼓勵並提供建議"
+        effect: "relationship +10"
+      - text: "提出幫忙宣傳"
+        effect: "relationship +7"
+      - text: "敷衍帶過"
+        effect: "relationship -7"
+
+  rainy_day:
+    id: "rainy_day"
+    name: "雨中相遇"
+    condition: "scene == cafe and weather == rainy and relationship_level >= 40"
+    description: "優希下班時下起大雨，她沒帶傘。"
+    choices:
+      - text: "送她一把傘"
+        effect: "relationship +7"
+      - text: "提議一起等雨停"
+        effect: "relationship +5"
+      - text: "借傘給她明天再還"
+        effect: "relationship +8"
+
+gift_reactions:
+  art_book:
+    min_relationship: 20
+    reactions:
+      - condition: "first_time"
+        response: "這是...！好精美的畫冊，謝謝你這麼用心的禮物。"
+        effect: "relationship +10"
+      - condition: "repeat"
+        response: "又是藝術畫冊呢，雖然很感謝...但是不用總是送我禮物的。"
+        effect: "relationship +3"
+
+  sketch_kit:
+    min_relationship: 40
+    reactions:
+      - condition: "first_time"
+        response: "這套素描工具也太高級了...真的可以送我這麼貴重的禮物嗎？"
+        effect: "relationship +15"
+      - condition: "repeat"
+        response: "謝謝你的心意，不過我已經有很好的工具了..."
+        effect: "relationship +2"
+
+  art_postcard:
+    min_relationship: 0
+    reactions:
+      - condition: "first_time"
+        response: "謝謝你的明信片，我很喜歡這個設計。"
+        effect: "relationship +5"
+      - condition: "repeat"
+        response: "又是明信片呢，謝謝。"
+        effect: "relationship +2"
+
+  flowers:
+    min_relationship: 20
+    reactions:
+      - condition: "first_time"
+        response: "這些花真漂亮！謝謝你特地摘來送我。"
+        effect: "relationship +8"
+      - condition: "repeat"
+        response: "又送我花呀，你真的很貼心呢。"
+        effect: "relationship +4"
